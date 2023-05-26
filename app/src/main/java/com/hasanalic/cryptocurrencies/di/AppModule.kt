@@ -1,5 +1,7 @@
 package com.hasanalic.cryptocurrencies.di
 
+import com.hasanalic.cryptocurrencies.repository.CryptoRepository
+import com.hasanalic.cryptocurrencies.repository.CryptoRepositoryImp
 import com.hasanalic.cryptocurrencies.service.CryptoAPI
 import com.hasanalic.cryptocurrencies.util.Constants
 import dagger.Module
@@ -23,5 +25,11 @@ object AppModule {
             .baseUrl(Constants.BASE_URL)
             .build()
             .create()
+    }
+
+    @Singleton
+    @Provides
+    fun provideCryptoRepository(retrofit: CryptoAPI): CryptoRepository {
+        return CryptoRepositoryImp(retrofit)
     }
 }
