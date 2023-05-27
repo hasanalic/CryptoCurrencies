@@ -1,10 +1,8 @@
 package com.hasanalic.cryptocurrencies.view
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,9 +27,7 @@ import coil.compose.rememberImagePainter
 import com.hasanalic.cryptocurrencies.model.Crypto
 import com.hasanalic.cryptocurrencies.util.Resource
 import com.hasanalic.cryptocurrencies.viewmodel.CryptoDetailViewModel
-import kotlinx.coroutines.launch
 
-@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun CryptoDetailScreen(
     id: String,
@@ -41,14 +36,22 @@ fun CryptoDetailScreen(
     viewModel: CryptoDetailViewModel = hiltViewModel()
 ) {
 
-    // Step 1 -> Wrong
-    val scope = rememberCoroutineScope()
+    /*
+    // Way-1
     var cryptoItem by remember {
         mutableStateOf<Resource<Crypto>>(Resource.Loading())
     }
-    scope.launch {
+
+    LaunchedEffect(key1 = Unit) {
         cryptoItem = viewModel.getCrypto()
-        println(cryptoItem.data)
+    }
+
+     */
+
+    // Way-2
+
+    val cryptoItem by produceState<Resource<Crypto>>(initialValue = Resource.Loading()) {
+        value = viewModel.getCrypto()
     }
 
     Box(
@@ -66,7 +69,7 @@ fun CryptoDetailScreen(
                         style = MaterialTheme.typography.headlineLarge,
                         modifier = Modifier.padding(2.dp),
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.primaryContainer,
                         textAlign = TextAlign.Center
                     )
                     Image(
